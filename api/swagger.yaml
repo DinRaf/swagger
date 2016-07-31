@@ -1,0 +1,1018 @@
+---
+swagger: "2.0"
+info:
+  version: "v0.1.0"
+  title: "FORUM API"
+host: "localhost:8080"
+tags:
+- name: "registration"
+  description: "Регистрация и авторизация"
+- name: "users"
+  description: "Работа с пользователями"
+- name: "search"
+  description: "Работа с поиском"
+- name: "themes"
+  description: "Работа с темами"
+- name: "messages"
+  description: "Работа с сообщениями"
+- name: "sections"
+  description: "Разделы и прочая статическая информация"
+schemes:
+- "http"
+produces:
+- "application/json"
+paths:
+  /users:
+    get:
+      tags:
+      - "search"
+      summary: "Поиск пользователей"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "find"
+        in: "query"
+        description: "Ключевое слово по которому ведется поиск"
+        required: true
+        type: "string"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Запрос успешно обработан."
+          schema:
+            $ref: "#/definitions/UsersResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/UsersNotAuthResponseDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+    post:
+      tags:
+      - "registration"
+      summary: "Регистрация пользователя"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Информация о пользователе, которого необходимо зарегистрировать"
+        required: true
+        schema:
+          $ref: "#/definitions/PostUserDto"
+      responses:
+        201:
+          description: "Пользователь зарегистрирован"
+          schema:
+            $ref: "#/definitions/MetaDto"
+          headers:
+            Auth-Token:
+              type: "string"
+              description: "Токен авторизации"
+            user-id:
+              type: "integer"
+              description: "Идентификатор пользователя"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /users/{user-id}:
+    put:
+      tags:
+      - "users"
+      summary: "Редактирование профиля"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      - name: "user-id"
+        in: "path"
+        description: "Идентификатор пользователя"
+        required: true
+        type: "integer"
+      - name: "body"
+        in: "body"
+        description: "Обновляемая информация пользователя"
+        required: true
+        schema:
+          $ref: "#/definitions/UserDto"
+      responses:
+        201:
+          description: "Профиль обновлен"
+          schema:
+            $ref: "#/definitions/UserResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        404:
+          description: "Пользователь не найден"
+          schema:
+            $ref: "#/definitions/404_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+    get:
+      tags:
+      - "users"
+      summary: "Информация о пользователе"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "user-id"
+        description: "Идентификатор пользователя"
+        in: "path"
+        required: true
+        type: "integer"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Запрос успешно обработан."
+          schema:
+            $ref: "#/definitions/UserResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/UserNotAuthResponseDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /login:
+    post:
+      tags:
+      - "registration"
+      summary: "Авторизация"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "nickName"
+        in: "header"
+        description: "Логин"
+        required: false
+        type: "string"
+      - name: "mail"
+        in: "header"
+        description: "E-mail пользователя"
+        required: false
+        type: "string"
+      - name: "password"
+        in: "header"
+        description: "Пароль"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Авторизация прошла успешно"
+          schema:
+            $ref: "#/definitions/MetaDto"
+          headers:
+            Auth-Token:
+              type: "string"
+              description: "Токен авторизации"
+            user-id:
+              type: "integer"
+              description: "Идентификатор пользователя"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /sections:
+    get:
+      tags:
+      - "sections"
+      summary: "Получение категорий"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Запрос успешно обработан"
+          schema:
+            $ref: "#/definitions/SectionsResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /{section-id}/subsections:
+    get:
+      tags:
+      - "sections"
+      summary: "Получение подкатегорий"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "section-id"
+        in: "path"
+        description: "Идентификатор категории"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Запрос успешно обработан"
+          schema:
+            $ref: "#/definitions/SubsectionsResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /themes:
+    get:
+      tags:
+      - "search"
+      summary: "Поиск темы"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "find"
+        in: "query"
+        description: "Ключевое слово по которому ведется поиск"
+        required: true
+        type: "string"
+      - name: "section-id"
+        in: "query"
+        description: "Идентификатор категории в которой нужно искать"
+        required: false
+        type: "integer"
+      - name: "subsection-id"
+        in: "query"
+        description: "Идентификатор подкатегории в которой нужно искать"
+        required: false
+        type: "integer"
+      responses:
+        200:
+          description: "Запрос успешно обработан"
+          schema:
+            $ref: "#/definitions/ThemeSearchResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+    post:
+      tags:
+      - "themes"
+      summary: "Создание темы"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Информация о создаваемой теме"
+        required: true
+        schema:
+          $ref: "#/definitions/PostThemeDto"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Тема создана"
+          schema:
+            $ref: "#/definitions/ThemeResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /themes/{theme-id}:
+    get:
+      tags:
+      - "themes"
+      summary: "Получение страницы темы"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "theme-id"
+        description: "Идентификатор темы"
+        in: "path"
+        required: true
+        type: "integer"
+      - name: "page"
+        description: "Номер страницы"
+        in: "query"
+        required: false
+        type: "integer"
+      - name: "messagesCount"
+        description: "Количество сообщений"
+        in: "query"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Запрос успешно обработан."
+          schema:
+            $ref: "#/definitions/ThemeResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+    put:
+      tags:
+      - "themes"
+      summary: "Отредактировать тему"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "theme-id"
+        in: "path"
+        description: "Идентификатор темы"
+        required: true
+        type: "integer"
+      - name: "title"
+        in: "query"
+        description: "Название темы"
+        required: true
+        type: "string"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Тема обновлена"
+          schema:
+            $ref: "#/definitions/ThemeResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        404:
+          description: "Пользователь не найден"
+          schema:
+            $ref: "#/definitions/404_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+    post:
+      tags:
+      - "messages"
+      summary: "Добавить сообщение"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "theme-id"
+        in: "path"
+        description: "Идетнификатор темы"
+        required: true
+        type: "integer"
+      - name: "message"
+        in: "query"
+        description: "Тело сообщения"
+        required: true
+        type: "string"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Сообщение добавлено"
+          schema:
+            $ref: "#/definitions/ThemeResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+    delete:
+      tags:
+      - "themes"
+      summary: "Удалить тему"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "theme-id"
+        in: "path"
+        description: "Идетнификатор темы"
+        required: true
+        type: "integer"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Тема успешно удалена"
+          schema:
+            $ref: "#/definitions/StatusResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        404:
+          description: "Тема не найдена"
+          schema:
+            $ref: "#/definitions/404_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /themes/{theme-id}/{message-id}:
+    put:
+      tags:
+      - "messages"
+      summary: "Отредактировать сообщение"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "theme-id"
+        in: "path"
+        description: "Идентификатор темы"
+        required: true
+        type: "integer"
+      - name: "message-id"
+        in: "path"
+        description: "Идентификатор сообщения"
+        required: true
+        type: "integer"
+      - name: "message"
+        in: "query"
+        description: "Новое сообщение"
+        required: true
+        type: "string"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Сообщение обновлено"
+          schema:
+            $ref: "#/definitions/ThemeResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        404:
+          description: "Пользователь не найден"
+          schema:
+            $ref: "#/definitions/404_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+    delete:
+      tags:
+      - "messages"
+      summary: "Удалить Сообщение"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "theme-id"
+        in: "path"
+        description: "Идетнификатор темы"
+        required: true
+        type: "integer"
+      - name: "message-id"
+        in: "path"
+        description: "Идетнификатор сообщения"
+        required: true
+        type: "integer"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Сообщение успешно удалено"
+          schema:
+            $ref: "#/definitions/StatusResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        404:
+          description: "Тема не найдена/Сообщение не найдено"
+          schema:
+            $ref: "#/definitions/404_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+  /about:
+    get:
+      tags:
+      - "sections"
+      summary: "Информация о сайте"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Запрос успешно обработан"
+          schema:
+            $ref: "#/definitions/AboutDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+definitions:
+  AboutDto:
+    type: string
+    description: "Информация об авторах"
+  UsersNotAuthResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о пользователе"
+        $ref: "#/definitions/UsersNotAuthDto"
+  UsersNotAuthDto:
+    type: "array"
+    description: "Список пользователей"
+    items:
+      $ref: "#/definitions/UsersNotAuthDto"
+  UserNotAuthResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о пользователе"
+        $ref: "#/definitions/UserNotAuthDto"
+  UserNotAuthDto:
+    type: "object"
+    properties:
+      nickName:
+        type: "string"
+        description: "Никнейм пользователя"
+      info:
+        type: "string"
+        description: "Информация о пользователе"
+      rating:
+        type: "integer"
+        description: "Рейтинг пользователя"
+      registrationTime:
+        type: "integer"
+        description: "Время регистрации"
+      lastSession:
+        type: "integer"
+        description: "Время последней сессии"
+      messagesCount:
+        type: "integer"
+        description: "Количество сообщений"
+      themesCount:
+        type: "integer"
+        description: "Количество созданных тем"
+      avatar:
+        type: "string"
+        description: "URL ссылка на аватар"
+      isOnline:
+        type: boolean
+        description: "Онлайн ли пользователь"
+  UsersResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о пользователе"
+        $ref: "#/definitions/UsersDto"
+  UsersDto:
+    type: "array"
+    description: "Список пользователей"
+    items:
+      $ref: "#/definitions/UserDto"
+  UserResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о пользователе"
+        $ref: "#/definitions/UserDto"
+  UserDto:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "Имя пользователя"
+      nickName:
+        type: "string"
+        description: "Никнейм пользователя"
+      mail:
+        type: "string"
+        description: "E-mail пользователя"
+      dateOfBirth: 
+        type: "integer"
+        description: "Дата рождения"
+      info:
+        type: "string"
+        description: "Информация о пользователе"
+      rating:
+        type: "integer"
+        description: "Рейтинг пользователя"
+      registrationTime:
+        type: "integer"
+        description: "Время регистрации"
+      lastSession:
+        type: "integer"
+        description: "Время последней сессии"
+      messagesCount:
+        type: "integer"
+        description: "Количество сообщений"
+      themesCount:
+        type: "integer"
+        description: "Количество созданных тем"
+      avatar:
+        type: "string"
+        description: "URL ссылка на аватар"
+      isOnline:
+        type: boolean
+        description: "Онлайн ли пользователь"
+  SubsectionsResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о посте"
+        $ref: "#/definitions/SubsectionsDto"
+  SectionsResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о посте"
+        $ref: "#/definitions/SectionsDto"
+  SubsectionsDto:
+    type: "array"
+    items:
+      $ref: "#/definitions/SubsectionDto"
+  SectionsDto:
+    type: "array"
+    items:
+      $ref: "#/definitions/SectionDto"
+  SubsectionDto:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        description: "Идентификатор подкатегории"
+      name:
+        type: "string"
+        description: "Название подкатегории"
+      themesCount: 
+        type: "integer"
+        description: "Количество тем в данной подкатегории"
+  SectionDto:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        description: "Идентификатор категории"
+      name:
+        type: "string"
+        description: "Название категории"
+      themesCount: 
+        type: "integer"
+        description: "Количество тем в данной категории"
+      subsectionsCount:
+        type: "integer"
+        description: "Количество подкатегорий"
+  ThemeResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о посте"
+        $ref: "#/definitions/ThemeDto"
+  ThemeSearchResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+      data:
+        description: "Информация о посте"
+        $ref: "#/definitions/ThemeSearchDto"
+  ThemesSearchDto:
+    type: "array"
+    items:
+      $ref: "#/definitions/ThemeSearchDto"
+  ThemeSearchDto:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "Заголовок темы"
+      author-id:
+        type: "integer"
+        description: "Идентификатор автора"
+      date: 
+        type: "integer"
+        description: "Время создания темы"
+      messagesCount:
+        type: "integer"
+        description: "Количество сообщений в теме"
+      status:
+        type: "boolean"
+        description: "Закрыта тема или нет"
+  ThemeDto:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+        description: "Заголовок темы"
+      author-id:
+        type: "integer"
+        description: "Идентификатор автора"
+      date: 
+        type: "integer"
+        description: "Время создания темы"
+      messagesCount:
+        type: "integer"
+        description: "Количество сообщений в теме"
+      messages:
+        description: "Сообщения темы"
+        $ref: "#/definitions/MessagesDto"
+      status:
+        type: "boolean"
+        description: "Закрыта тема или нет"
+  MessagesDto:
+    type: "array"
+    items:
+      $ref: "#/definitions/MessageDto"
+  MessageDto:
+    type: "object"
+    properties:
+      author:
+        description: "Информация об авторе"
+        $ref: "#/definitions/ShortUserDto"
+      message:
+        type: "string"
+        description: "Тело сообщения"
+      date:
+        type: "integer"
+        description: "Время создания сообщения"
+      updated:
+        description: "Последняя правка сообщения"
+        $ref: "#/definitions/FixMessageDto"
+  ShortUserDto:
+    type: "object"
+    properties:
+      user-id:
+        type: "integer"
+        description: "Идентификатор пользователя"
+      nickName: 
+        type: "string"
+        description: "Никнейм пользователя"
+      rating:
+        type: "integer"
+        description: "Рейтинг пользователя"
+      isOnline:
+        type: boolean
+        description: "Онлайн ли пользователь"
+      avatar:
+        type: "string"
+        description: "URL автара пользователя"
+  FixMessageDto:
+    type: "object"
+    properties:
+      date:
+        type: "integer"
+        description: "Время редактирования сообщения"
+      nickName:
+        type: "string"
+        description: "Ник отредактировавшего данное сообщение"
+      user-id:
+        type: "integer"
+        description: "Идентификатор отредактировавшего данное сообщение"
+  PostThemeDto:
+    type: "object"
+    required:
+    - "title"
+    - "message"
+    - "section"
+    - "subsection"
+    properties:
+      title:
+        type: "string"
+        description: "Название темы"
+      message:
+        type: "string"
+        description: "Категория темы"
+      section:
+        type: "string"
+        description: "Категория темы"
+      subsection:
+        type: "string"
+        description: "Подкатегория темы"
+  PostUserDto:
+    type: "object"
+    required:
+    - "nickName"
+    - "mail"
+    - "password"
+    properties:
+      nickName:
+        type: "string"
+        description: "Ник пользователя"
+      mail:
+        type: "string"
+        description: "E-mail пользователя"
+      password:
+        type: "string"
+        description: "Пароль пользователя"
+  MetaDto:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        description: "HTTP-код"
+      status:
+        type: "string"
+        description: "Статус выполнения запроса - success/fail"
+  StatusResponseDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/MetaDto"
+  ErrorResponseMeta:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        description: "Код ответа"
+      status:
+        type: "string"
+        description: "Статус выполнения запроса"
+      message:
+        type: "string"
+        description: "Сообщение сервера"
+  401_ErrorDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/ErrorResponseMeta"
+    example:
+      meta:
+        code: 401
+        status: "fail"
+        message: "Unauthorized user"
+  403_ErrorDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/ErrorResponseMeta"
+    example:
+      meta:
+        code: 403
+        status: "fail"
+        message: "Banned user"
+  404_ErrorDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/ErrorResponseMeta"
+    example:
+      meta:
+        code: 404
+        status: "fail"
+        message: "Not found"
+  500_ErrorDto:
+    type: "object"
+    properties:
+      meta:
+        description: "Информация об ответе"
+        $ref: "#/definitions/ErrorResponseMeta"
+    example:
+      meta:
+        code: 500
+        status: "fail"
+        message: "IllegalArgumentException"
