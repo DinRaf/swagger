@@ -22,33 +22,20 @@ schemes:
 produces:
 - "application/json"
 paths:
-  /users:
+  /about:
     get:
       tags:
-      - "search"
-      summary: "Поиск пользователей"
+      - "sections"
+      summary: "Информация о сайте"
+      operationId: "aboutGET"
       produces:
       - "application/json"
-      parameters:
-      - name: "find"
-        in: "query"
-        description: "Ключевое слово по которому ведется поиск"
-        required: true
-        type: "string"
-      - name: "Auth-Token"
-        in: "header"
-        description: "Токен авторизации"
-        required: true
-        type: "string"
+      parameters: []
       responses:
         200:
-          description: "Запрос успешно обработан."
+          description: "Запрос успешно обработан"
           schema:
-            $ref: "#/definitions/UsersResponseDto"
-        401:
-          description: "Пользователь не авторизован"
-          schema:
-            $ref: "#/definitions/UsersNotAuthResponseDto"
+            $ref: "#/definitions/AboutDto"
         403:
           description: "Данное действие для пользователя запрещенно"
           schema:
@@ -57,127 +44,13 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
-    post:
-      tags:
-      - "registration"
-      summary: "Регистрация пользователя"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Информация о пользователе, которого необходимо зарегистрировать"
-        required: true
-        schema:
-          $ref: "#/definitions/PostUserDto"
-      responses:
-        201:
-          description: "Пользователь зарегистрирован"
-          schema:
-            $ref: "#/definitions/MetaDto"
-          headers:
-            Auth-Token:
-              type: "string"
-              description: "Токен авторизации"
-            user-id:
-              type: "integer"
-              description: "Идентификатор пользователя"
-        403:
-          description: "Данное действие для пользователя запрещенно"
-          schema:
-            $ref: "#/definitions/403_ErrorDto"
-        500:
-          description: "Внутренняя ошибка сервера"
-          schema:
-            $ref: "#/definitions/500_ErrorDto"
-  /users/{user-id}:
-    put:
-      tags:
-      - "users"
-      summary: "Редактирование профиля"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "Auth-Token"
-        in: "header"
-        description: "Токен авторизации"
-        required: true
-        type: "string"
-      - name: "user-id"
-        in: "path"
-        description: "Идентификатор пользователя"
-        required: true
-        type: "integer"
-      - name: "body"
-        in: "body"
-        description: "Обновляемая информация пользователя"
-        required: true
-        schema:
-          $ref: "#/definitions/UserDto"
-      responses:
-        201:
-          description: "Профиль обновлен"
-          schema:
-            $ref: "#/definitions/UserResponseDto"
-        401:
-          description: "Пользователь не авторизован"
-          schema:
-            $ref: "#/definitions/401_ErrorDto"
-        403:
-          description: "Данное действие для пользователя запрещенно"
-          schema:
-            $ref: "#/definitions/403_ErrorDto"
-        404:
-          description: "Пользователь не найден"
-          schema:
-            $ref: "#/definitions/404_ErrorDto"
-        500:
-          description: "Внутренняя ошибка сервера"
-          schema:
-            $ref: "#/definitions/500_ErrorDto"
-    get:
-      tags:
-      - "users"
-      summary: "Информация о пользователе"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "user-id"
-        description: "Идентификатор пользователя"
-        in: "path"
-        required: true
-        type: "integer"
-      - name: "Auth-Token"
-        in: "header"
-        description: "Токен авторизации"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Запрос успешно обработан."
-          schema:
-            $ref: "#/definitions/UserResponseDto"
-        401:
-          description: "Пользователь не авторизован"
-          schema:
-            $ref: "#/definitions/UserNotAuthResponseDto"
-        403:
-          description: "Данное действие для пользователя запрещенно"
-          schema:
-            $ref: "#/definitions/403_ErrorDto"
-        500:
-          description: "Внутренняя ошибка сервера"
-          schema:
-            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Sections"
   /login:
     post:
       tags:
       - "registration"
       summary: "Авторизация"
+      operationId: "loginPOST"
       consumes:
       - "application/json"
       produces:
@@ -218,13 +91,16 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Registration"
   /sections:
     get:
       tags:
       - "sections"
       summary: "Получение категорий"
+      operationId: "sectionsGET"
       produces:
       - "application/json"
+      parameters: []
       responses:
         200:
           description: "Запрос успешно обработан"
@@ -242,41 +118,13 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
-  /{section-id}/subsections:
-    get:
-      tags:
-      - "sections"
-      summary: "Получение подкатегорий"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "section-id"
-        in: "path"
-        description: "Идентификатор категории"
-        required: true
-        type: "integer"
-      responses:
-        200:
-          description: "Запрос успешно обработан"
-          schema:
-            $ref: "#/definitions/SubsectionsResponseDto"
-        401:
-          description: "Пользователь не авторизован"
-          schema:
-            $ref: "#/definitions/401_ErrorDto"
-        403:
-          description: "Данное действие для пользователя запрещенно"
-          schema:
-            $ref: "#/definitions/403_ErrorDto"
-        500:
-          description: "Внутренняя ошибка сервера"
-          schema:
-            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Sections"
   /themes:
     get:
       tags:
       - "search"
       summary: "Поиск темы"
+      operationId: "themesGET"
       produces:
       - "application/json"
       parameters:
@@ -312,17 +160,19 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Search"
     post:
       tags:
       - "themes"
       summary: "Создание темы"
+      operationId: "themesPOST"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "body"
-        in: "body"
+      - in: "body"
+        name: "body"
         description: "Информация о создаваемой теме"
         required: true
         schema:
@@ -349,27 +199,29 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Themes"
   /themes/{theme-id}:
     get:
       tags:
       - "themes"
       summary: "Получение страницы темы"
+      operationId: "themesTheme_idGET"
       produces:
       - "application/json"
       parameters:
       - name: "theme-id"
-        description: "Идентификатор темы"
         in: "path"
+        description: "Идентификатор темы"
         required: true
         type: "integer"
       - name: "page"
-        description: "Номер страницы"
         in: "query"
+        description: "Номер страницы"
         required: false
         type: "integer"
       - name: "messagesCount"
-        description: "Количество сообщений"
         in: "query"
+        description: "Количество сообщений"
         required: true
         type: "integer"
       responses:
@@ -389,10 +241,55 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Themes"
+    post:
+      tags:
+      - "messages"
+      summary: "Добавить сообщение"
+      operationId: "themesTheme_idPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "theme-id"
+        in: "path"
+        description: "Идетнификатор темы"
+        required: true
+        type: "integer"
+      - name: "message"
+        in: "query"
+        description: "Тело сообщения"
+        required: true
+        type: "string"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Сообщение добавлено"
+          schema:
+            $ref: "#/definitions/ThemeResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Messages"
     put:
       tags:
       - "themes"
       summary: "Отредактировать тему"
+      operationId: "themesTheme_idPUT"
       consumes:
       - "application/json"
       produces:
@@ -434,51 +331,12 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
-    post:
-      tags:
-      - "messages"
-      summary: "Добавить сообщение"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "theme-id"
-        in: "path"
-        description: "Идетнификатор темы"
-        required: true
-        type: "integer"
-      - name: "message"
-        in: "query"
-        description: "Тело сообщения"
-        required: true
-        type: "string"
-      - name: "Auth-Token"
-        in: "header"
-        description: "Токен авторизации"
-        required: true
-        type: "string"
-      responses:
-        201:
-          description: "Сообщение добавлено"
-          schema:
-            $ref: "#/definitions/ThemeResponseDto"
-        401:
-          description: "Пользователь не авторизован"
-          schema:
-            $ref: "#/definitions/401_ErrorDto"
-        403:
-          description: "Данное действие для пользователя запрещенно"
-          schema:
-            $ref: "#/definitions/403_ErrorDto"
-        500:
-          description: "Внутренняя ошибка сервера"
-          schema:
-            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Themes"
     delete:
       tags:
       - "themes"
       summary: "Удалить тему"
+      operationId: "themesTheme_idDELETE"
       produces:
       - "application/json"
       parameters:
@@ -513,11 +371,13 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Themes"
   /themes/{theme-id}/{message-id}:
     put:
       tags:
       - "messages"
       summary: "Отредактировать сообщение"
+      operationId: "themesTheme_idMessage_idPUT"
       consumes:
       - "application/json"
       produces:
@@ -564,10 +424,12 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Messages"
     delete:
       tags:
       - "messages"
       summary: "Удалить Сообщение"
+      operationId: "themesTheme_idMessage_idDELETE"
       produces:
       - "application/json"
       parameters:
@@ -607,18 +469,35 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
-  /about:
+      x-swagger-router-controller: "Messages"
+  /users:
     get:
       tags:
-      - "sections"
-      summary: "Информация о сайте"
+      - "search"
+      summary: "Поиск пользователей"
+      operationId: "usersGET"
       produces:
       - "application/json"
+      parameters:
+      - name: "find"
+        in: "query"
+        description: "Ключевое слово по которому ведется поиск"
+        required: true
+        type: "string"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
       responses:
         200:
-          description: "Запрос успешно обработан"
+          description: "Запрос успешно обработан."
           schema:
-            $ref: "#/definitions/AboutDto"
+            $ref: "#/definitions/UsersResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/UsersNotAuthResponseDto"
         403:
           description: "Данное действие для пользователя запрещенно"
           schema:
@@ -627,9 +506,165 @@ paths:
           description: "Внутренняя ошибка сервера"
           schema:
             $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Search"
+    post:
+      tags:
+      - "registration"
+      summary: "Регистрация пользователя"
+      operationId: "usersPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Информация о пользователе, которого необходимо зарегистриров\
+          ать"
+        required: true
+        schema:
+          $ref: "#/definitions/PostUserDto"
+      responses:
+        201:
+          description: "Пользователь зарегистрирован"
+          schema:
+            $ref: "#/definitions/MetaDto"
+          headers:
+            Auth-Token:
+              type: "string"
+              description: "Токен авторизации"
+            user-id:
+              type: "integer"
+              description: "Идентификатор пользователя"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Registration"
+  /users/{user-id}:
+    get:
+      tags:
+      - "users"
+      summary: "Информация о пользователе"
+      operationId: "usersUser_idGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "user-id"
+        in: "path"
+        description: "Идентификатор пользователя"
+        required: true
+        type: "integer"
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Запрос успешно обработан."
+          schema:
+            $ref: "#/definitions/UserResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/UserNotAuthResponseDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Users"
+    put:
+      tags:
+      - "users"
+      summary: "Редактирование профиля"
+      operationId: "usersUser_idPUT"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Auth-Token"
+        in: "header"
+        description: "Токен авторизации"
+        required: true
+        type: "string"
+      - name: "user-id"
+        in: "path"
+        description: "Идентификатор пользователя"
+        required: true
+        type: "integer"
+      - in: "body"
+        name: "body"
+        description: "Обновляемая информация пользователя"
+        required: true
+        schema:
+          $ref: "#/definitions/UserDto"
+      responses:
+        201:
+          description: "Профиль обновлен"
+          schema:
+            $ref: "#/definitions/UserResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        404:
+          description: "Пользователь не найден"
+          schema:
+            $ref: "#/definitions/404_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Users"
+  /{section-id}/subsections:
+    get:
+      tags:
+      - "sections"
+      summary: "Получение подкатегорий"
+      operationId: "section_idSubsectionsGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "section-id"
+        in: "path"
+        description: "Идентификатор категории"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Запрос успешно обработан"
+          schema:
+            $ref: "#/definitions/SubsectionsResponseDto"
+        401:
+          description: "Пользователь не авторизован"
+          schema:
+            $ref: "#/definitions/401_ErrorDto"
+        403:
+          description: "Данное действие для пользователя запрещенно"
+          schema:
+            $ref: "#/definitions/403_ErrorDto"
+        500:
+          description: "Внутренняя ошибка сервера"
+          schema:
+            $ref: "#/definitions/500_ErrorDto"
+      x-swagger-router-controller: "Sections"
 definitions:
   AboutDto:
-    type: string
+    type: "string"
     description: "Информация об авторах"
   UsersNotAuthResponseDto:
     type: "object"
@@ -682,7 +717,7 @@ definitions:
         type: "string"
         description: "URL ссылка на аватар"
       isOnline:
-        type: boolean
+        type: "boolean"
         description: "Онлайн ли пользователь"
   UsersResponseDto:
     type: "object"
@@ -719,7 +754,7 @@ definitions:
       mail:
         type: "string"
         description: "E-mail пользователя"
-      dateOfBirth: 
+      dateOfBirth:
         type: "integer"
         description: "Дата рождения"
       info:
@@ -744,7 +779,7 @@ definitions:
         type: "string"
         description: "URL ссылка на аватар"
       isOnline:
-        type: boolean
+        type: "boolean"
         description: "Онлайн ли пользователь"
   SubsectionsResponseDto:
     type: "object"
@@ -781,7 +816,7 @@ definitions:
       name:
         type: "string"
         description: "Название подкатегории"
-      themesCount: 
+      themesCount:
         type: "integer"
         description: "Количество тем в данной подкатегории"
   SectionDto:
@@ -793,7 +828,7 @@ definitions:
       name:
         type: "string"
         description: "Название категории"
-      themesCount: 
+      themesCount:
         type: "integer"
         description: "Количество тем в данной категории"
       subsectionsCount:
@@ -830,7 +865,7 @@ definitions:
       author-id:
         type: "integer"
         description: "Идентификатор автора"
-      date: 
+      date:
         type: "integer"
         description: "Время создания темы"
       messagesCount:
@@ -848,7 +883,7 @@ definitions:
       author-id:
         type: "integer"
         description: "Идентификатор автора"
-      date: 
+      date:
         type: "integer"
         description: "Время создания темы"
       messagesCount:
@@ -885,14 +920,14 @@ definitions:
       user-id:
         type: "integer"
         description: "Идентификатор пользователя"
-      nickName: 
+      nickName:
         type: "string"
         description: "Никнейм пользователя"
       rating:
         type: "integer"
         description: "Рейтинг пользователя"
       isOnline:
-        type: boolean
+        type: "boolean"
         description: "Онлайн ли пользователь"
       avatar:
         type: "string"
@@ -912,10 +947,10 @@ definitions:
   PostThemeDto:
     type: "object"
     required:
-    - "title"
     - "message"
     - "section"
     - "subsection"
+    - "title"
     properties:
       title:
         type: "string"
@@ -932,8 +967,8 @@ definitions:
   PostUserDto:
     type: "object"
     required:
-    - "nickName"
     - "mail"
+    - "nickName"
     - "password"
     properties:
       nickName:
