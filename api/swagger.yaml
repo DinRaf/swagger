@@ -80,7 +80,7 @@ paths:
             Auth-Token:
               type: "string"
               description: "Токен авторизации"
-            user-id:
+            userId:
               type: "integer"
               description: "Идентификатор пользователя"
         403:
@@ -133,12 +133,12 @@ paths:
         description: "Ключевое слово по которому ведется поиск"
         required: true
         type: "string"
-      - name: "section-id"
+      - name: "sectionId"
         in: "query"
         description: "Идентификатор категории в которой нужно искать"
         required: false
         type: "integer"
-      - name: "subsection-id"
+      - name: "subsectionId"
         in: "query"
         description: "Идентификатор подкатегории в которой нужно искать"
         required: false
@@ -533,7 +533,7 @@ paths:
             Auth-Token:
               type: "string"
               description: "Токен авторизации"
-            user-id:
+            userId:
               type: "integer"
               description: "Идентификатор пользователя"
         403:
@@ -862,7 +862,7 @@ definitions:
       title:
         type: "string"
         description: "Заголовок темы"
-      author-id:
+      authorId:
         type: "integer"
         description: "Идентификатор автора"
       date:
@@ -880,7 +880,7 @@ definitions:
       title:
         type: "string"
         description: "Заголовок темы"
-      author-id:
+      authorId:
         type: "integer"
         description: "Идентификатор автора"
       date:
@@ -917,7 +917,7 @@ definitions:
   ShortUserDto:
     type: "object"
     properties:
-      user-id:
+      userId:
         type: "integer"
         description: "Идентификатор пользователя"
       nickName:
@@ -941,7 +941,7 @@ definitions:
       nickName:
         type: "string"
         description: "Ник отредактировавшего данное сообщение"
-      user-id:
+      userId:
         type: "integer"
         description: "Идентификатор отредактировавшего данное сообщение"
   PostThemeDto:
