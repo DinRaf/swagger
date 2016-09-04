@@ -128,6 +128,12 @@ paths:
             Auth-Token:
               type: "string"
               description: "Токен авторизации"
+<<<<<<< HEAD
+=======
+            userId:
+              type: "integer"
+              description: "Идентификатор пользователя"
+>>>>>>> c3c5f3063cb3de54bbec71d3ca8c81419c5b3918
         403:
           description: "Данное действие для пользователя запрещенно"
           schema:
@@ -326,11 +332,16 @@ paths:
         description: "Ключевое слово по которому ведется поиск"
         required: false
         type: "string"
+<<<<<<< HEAD
       - name: "offset"
+=======
+      - name: "sectionId"
+>>>>>>> c3c5f3063cb3de54bbec71d3ca8c81419c5b3918
         in: "query"
         description: "Отступ для пагинации"
         required: false
         type: "integer"
+<<<<<<< HEAD
       - name: "count"
         in: "query"
         description: "Количество тем который нужно отразить"
@@ -342,6 +353,9 @@ paths:
         required: false
         type: "string"
       - name: "subsection-url"
+=======
+      - name: "subsectionId"
+>>>>>>> c3c5f3063cb3de54bbec71d3ca8c81419c5b3918
         in: "query"
         description: "Идентификатор подкатегории в которой нужно искать"
         required: false
@@ -675,6 +689,12 @@ paths:
             Auth-Token:
               type: "string"
               description: "Токен авторизации"
+<<<<<<< HEAD
+=======
+            userId:
+              type: "integer"
+              description: "Идентификатор пользователя"
+>>>>>>> c3c5f3063cb3de54bbec71d3ca8c81419c5b3918
         403:
           description: "Данное действие для пользователя запрещенно"
           schema:
@@ -1153,8 +1173,13 @@ definitions:
         description: "HTTP-код"
       status:
         type: "string"
+<<<<<<< HEAD
         description: "Статус выполнения запроса - success/fail"
       count:
+=======
+        description: "Ник отредактировавшего данное сообщение"
+      userId:
+>>>>>>> c3c5f3063cb3de54bbec71d3ca8c81419c5b3918
         type: "integer"
         description: "Количество элементов для запроса"
       subsection:
