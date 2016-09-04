@@ -6,8 +6,8 @@ var url = require('url');
 var Sections = require('./SectionsService');
 
 
-module.exports.aboutGET = function aboutGET (req, res, next) {
-  Sections.aboutGET(req.swagger.params, res, next);
+module.exports.infoGET = function infoGET (req, res, next) {
+  Sections.infoGET(req.swagger.params, res, next);
 };
 
 module.exports.section_idSubsectionsGET = function section_idSubsectionsGET (req, res, next) {

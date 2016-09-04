@@ -10,10 +10,11 @@ exports.themesPOST = function(args, res, next) {
   examples['application/json'] = {
   "data" : {
     "date" : "",
+    "themeId" : "",
     "messages" : "",
     "messagesCount" : "",
     "title" : "aeiou",
-    "author-id" : "",
+    "authorId" : "",
     "status" : true
   },
   "meta" : {
@@ -58,17 +59,18 @@ exports.themesTheme_idGET = function(args, res, next) {
   /**
    * parameters expected in the args:
   * themeId (Integer)
-  * messagesCount (Integer)
-  * page (Integer)
+  * count (Integer)
+  * offset (Integer)
   **/
     var examples = {};
   examples['application/json'] = {
   "data" : {
     "date" : "",
+    "themeId" : "",
     "messages" : "",
     "messagesCount" : "",
     "title" : "aeiou",
-    "author-id" : "",
+    "authorId" : "",
     "status" : true
   },
   "meta" : {
@@ -89,6 +91,8 @@ exports.themesTheme_idGET = function(args, res, next) {
 exports.themesTheme_idPUT = function(args, res, next) {
   /**
    * parameters expected in the args:
+  * offset (Integer)
+  * count (Integer)
   * themeId (Integer)
   * title (String)
   * authToken (String)
@@ -97,10 +101,11 @@ exports.themesTheme_idPUT = function(args, res, next) {
   examples['application/json'] = {
   "data" : {
     "date" : "",
+    "themeId" : "",
     "messages" : "",
     "messagesCount" : "",
     "title" : "aeiou",
-    "author-id" : "",
+    "authorId" : "",
     "status" : true
   },
   "meta" : {

@@ -1,11 +1,21 @@
 'use strict';
 
-exports.aboutGET = function(args, res, next) {
+exports.infoGET = function(args, res, next) {
   /**
    * parameters expected in the args:
+  * identifier (String)
   **/
     var examples = {};
-  examples['application/json'] = { };
+  examples['application/json'] = {
+  "data" : {
+    "text" : "aeiou",
+    "title" : "aeiou"
+  },
+  "meta" : {
+    "code" : "",
+    "status" : "aeiou"
+  }
+};
   if(Object.keys(examples).length > 0) {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(examples[Object.keys(examples)[0]] || {}, null, 2));
@@ -19,13 +29,14 @@ exports.aboutGET = function(args, res, next) {
 exports.section_idSubsectionsGET = function(args, res, next) {
   /**
    * parameters expected in the args:
-  * sectionId (Integer)
+  * sectionUrl (String)
   **/
     var examples = {};
   examples['application/json'] = {
   "data" : "",
   "meta" : {
     "code" : "",
+    "section" : "aeiou",
     "status" : "aeiou"
   }
 };

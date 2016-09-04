@@ -3,21 +3,19 @@
 exports.themesGET = function(args, res, next) {
   /**
    * parameters expected in the args:
+  * count (Integer)
   * find (String)
-  * sectionId (Integer)
-  * subsectionId (Integer)
+  * offset (Integer)
+  * sectionUrl (String)
+  * subsectionUrl (String)
   **/
     var examples = {};
   examples['application/json'] = {
-  "data" : {
-    "date" : "",
-    "messagesCount" : "",
-    "title" : "aeiou",
-    "author-id" : "",
-    "status" : true
-  },
+  "data" : "",
   "meta" : {
+    "subsection" : "aeiou",
     "code" : "",
+    "count" : "",
     "status" : "aeiou"
   }
 };
@@ -34,14 +32,19 @@ exports.themesGET = function(args, res, next) {
 exports.usersGET = function(args, res, next) {
   /**
    * parameters expected in the args:
-  * find (String)
+  * sort (String)
+  * count (Integer)
   * authToken (String)
+  * find (String)
+  * isOnline (Boolean)
+  * offset (Integer)
   **/
     var examples = {};
   examples['application/json'] = {
   "data" : "",
   "meta" : {
     "code" : "",
+    "count" : "",
     "status" : "aeiou"
   }
 };
